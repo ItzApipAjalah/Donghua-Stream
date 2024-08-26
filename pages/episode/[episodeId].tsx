@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { useEffect } from 'react';
 import { fetchEpisodeDetails } from '../../services/api';
 import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
@@ -39,6 +40,22 @@ interface EpisodeDetailsProps {
 const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
   const router = useRouter();
   const { episodeId } = router.query;
+
+  // Save episode data to local storage as history
+  useEffect(() => {
+    if (episode) {
+      const history = JSON.parse(localStorage.getItem('episodeHistory') || '[]');
+      
+      // Remove any existing entry with the same episodeId
+      const updatedHistory = history.filter((item: any) => item.episodeId !== episodeId);
+      
+      // Add the current episode to the beginning of the history
+      updatedHistory.unshift({ ...episode, episodeId });
+      
+      // Save the updated history back to local storage
+      localStorage.setItem('episodeHistory', JSON.stringify(updatedHistory));
+    }
+  }, [episode, episodeId]);
 
   if (!episode) {
     return <div className="bg-gray-900 text-white min-h-screen flex items-center justify-center">Episode not found</div>;

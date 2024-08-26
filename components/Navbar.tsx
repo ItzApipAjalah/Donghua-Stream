@@ -95,6 +95,11 @@ const Navbar: React.FC = () => {
                 Bookmark
               </Link>
             </li>
+            <li>
+              <Link href="/history" className="block text-gray-300 hover:text-white transition duration-300 py-2 px-4 lg:py-0 lg:px-0">
+                History
+              </Link>
+            </li>
 
             <li className="lg:hidden block text-gray-300 hover:text-white transition duration-300 py-2 px-4 lg:py-0 lg:px-0">
               <button 
