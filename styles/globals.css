@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-color: #1a202c; /* Dark mode background */
+    color: #f7fafc; /* Light text color */
+    font-family: 'Inter', sans-serif; /* Modern font */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+  }
+  
+  a {
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  a:hover {
+    transform: scale(1.05);
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* Apply custom scrollbar to all scrollable elements */
+* {
+  scrollbar-color: #4a5568 #1a202c; /* thumb color and track color */
+  scrollbar-width: thin; /* makes scrollbar thinner */
+}
+
+::-webkit-scrollbar {
+  width: 8px; /* width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #1a202c; /* color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4a5568; /* color of the scrollbar thumb */
+  border-radius: 10px; /* roundness of the scrollbar thumb */
+  border: 2px solid #1a202c; /* gives some padding around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #2d3748; /* darker color on hover */
+}
