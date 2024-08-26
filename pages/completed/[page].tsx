@@ -3,7 +3,7 @@
 import { GetServerSideProps } from 'next';
 import React from 'react';
 import { useRouter } from 'next/router';
-import Head from 'next/head'; // Import Head
+import Head from 'next/head';
 import { fetchCompletedSeries } from '../../services/api';
 import DonghuaCard from '../../components/DonghuaCard';
 import Navbar from '../../components/Navbar';
@@ -29,6 +29,21 @@ const CompletedPage: React.FC<CompletedPageProps> = ({ seriesList, page, totalPa
   const handlePageChange = (pageNumber: number) => {
     router.push(`/completed/${pageNumber}`);
   };
+
+  // Helper to generate page range
+  const generatePageRange = (totalPages: number, currentPage: number) => {
+    const range = [];
+    const pageCount = Math.min(totalPages, 5); // Show up to 5 page links
+    const start = Math.max(1, currentPage - Math.floor(pageCount / 2));
+    const end = Math.min(totalPages, start + pageCount - 1);
+
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+    return range;
+  };
+
+  const pageRange = generatePageRange(totalPages, currentPage);
 
   return (
     <>
@@ -64,17 +79,42 @@ const CompletedPage: React.FC<CompletedPageProps> = ({ seriesList, page, totalPa
           ))}
         </div>
         <div className="flex justify-center mt-8">
-          {Array.from({ length: totalPages }, (_, index) => (
+          <nav className="flex items-center space-x-1">
+            {/* Previous Button */}
             <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`px-4 py-2 mx-1 rounded-lg ${
-                index + 1 === currentPage ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-700'
-              } hover:bg-gray-400 transition duration-300`}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                currentPage === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-700 text-white hover:bg-gray-600'
+              }`}
             >
-              {index + 1}
+              &laquo;
             </button>
-          ))}
+
+            {/* Page Numbers */}
+            {pageRange.map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  pageNumber === currentPage ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+                }`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+
+            {/* Next Button */}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                currentPage === totalPages ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-700 text-white hover:bg-gray-600'
+              }`}
+            >
+              &raquo;
+            </button>
+          </nav>
         </div>
       </div>
     </>
