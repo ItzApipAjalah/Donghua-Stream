@@ -1,12 +1,12 @@
 // pages/series/[seriesId].tsx
 
 import { GetServerSideProps } from 'next';
-import React, { useState, useEffect } from 'react'; // Import React and hooks
-import { fetchSeriesDetails } from '../../services/api'; // Adjust the import path as needed
+import React, { useState, useEffect } from 'react';
+import { fetchSeriesDetails } from '../../services/api';
 import { useRouter } from 'next/router';
-import Navbar from '../../components/Navbar'; // Adjust the import path as needed
-import Link from 'next/link'; // Import Link for navigation
-import Head from 'next/head'; // Import Head for dynamic meta tags
+import Navbar from '../../components/Navbar';
+import Link from 'next/link';
+import Head from 'next/head';
 import "../../styles/globals.css";
 
 interface SeriesDetailsProps {
@@ -39,7 +39,7 @@ interface SeriesDetailsProps {
     episodeDate: string;
     subtitleStatus: string;
   }[];
-  notFound?: boolean; // Added to handle not found cases
+  notFound?: boolean;
 }
 
 const SeriesPage: React.FC<SeriesDetailsProps> = ({ series, episodes, notFound }) => {
@@ -47,36 +47,40 @@ const SeriesPage: React.FC<SeriesDetailsProps> = ({ series, episodes, notFound }
   const { seriesId } = router.query;
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
-  if (notFound) {
-    return <div className="bg-gray-900 text-white min-h-screen flex items-center justify-center">Series not found</div>;
-  }
+  // Check if series is already bookmarked on component mount
+  useEffect(() => {
+    if (typeof seriesId === 'string') {
+      const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+      const isBookmarked = bookmarks.some((bookmark: { id: string }) => bookmark.id === seriesId);
+      setIsBookmarked(isBookmarked);
+    }
+  }, [seriesId]);
 
   const handleBookmark = () => {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-    const isAlreadyBookmarked = bookmarks.some((bookmark: { id: string }) => bookmark.id === seriesId);
+    if (typeof seriesId === 'string') {
+      const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+      const isAlreadyBookmarked = bookmarks.some((bookmark: { id: string }) => bookmark.id === seriesId);
 
-    if (isAlreadyBookmarked) {
-      // Remove bookmark if it already exists
-      const updatedBookmarks = bookmarks.filter((bookmark: { id: string }) => bookmark.id !== seriesId);
-      localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-      setIsBookmarked(false);
-    } else {
-      // Add new bookmark
-      const newBookmark = {
-        id: seriesId,
-        ...series,
-      };
-      localStorage.setItem('bookmarks', JSON.stringify([...bookmarks, newBookmark]));
-      setIsBookmarked(true);
+      if (isAlreadyBookmarked) {
+        // Remove bookmark if it already exists
+        const updatedBookmarks = bookmarks.filter((bookmark: { id: string }) => bookmark.id !== seriesId);
+        localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+        setIsBookmarked(false);
+      } else {
+        // Add new bookmark
+        const newBookmark = {
+          id: seriesId,
+          ...series,
+        };
+        localStorage.setItem('bookmarks', JSON.stringify([...bookmarks, newBookmark]));
+        setIsBookmarked(true);
+      }
     }
   };
 
-  // Check if series is already bookmarked on component mount
-  useEffect(() => {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-    const isBookmarked = bookmarks.some((bookmark: { id: string }) => bookmark.id === seriesId);
-    setIsBookmarked(isBookmarked);
-  }, [seriesId]);
+  if (notFound) {
+    return <div className="bg-gray-900 text-white min-h-screen flex items-center justify-center">Series not found</div>;
+  }
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
@@ -86,22 +90,10 @@ const SeriesPage: React.FC<SeriesDetailsProps> = ({ series, episodes, notFound }
           name="description"
           content={series?.shortDescription || 'Watch the latest and greatest Donghua series online. Explore a vast collection of genres and stay updated with ongoing series.'}
         />
-        <meta
-          property="og:title"
-          content={series?.mainTitle || 'Donghua Streaming'}
-        />
-        <meta
-          property="og:description"
-          content={series?.shortDescription || 'Watch the latest and greatest Donghua series online. Explore a vast collection of genres and stay updated with ongoing series.'}
-        />
-        <meta
-          property="og:image"
-          content={series?.mainImage || 'https://i.ibb.co/Ht9qGK0/logo.png'}
-        />
-        <meta
-          property="og:url"
-          content={`https://anime.amwp.website/series/${seriesId}`}
-        />
+        <meta property="og:title" content={series?.mainTitle || 'Donghua Streaming'} />
+        <meta property="og:description" content={series?.shortDescription || 'Watch the latest and greatest Donghua series online. Explore a vast collection of genres and stay updated with ongoing series.'} />
+        <meta property="og:image" content={series?.mainImage || 'https://i.ibb.co/Ht9qGK0/logo.png'} />
+        <meta property="og:url" content={`https://anime.amwp.website/series/${seriesId}`} />
         <meta property="og:type" content="website" />
         {/* Add any other dynamic meta tags if needed */}
       </Head>
@@ -178,7 +170,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const data = await fetchSeriesDetails(seriesId);
 
-    // Check if data is valid and contains the expected details
     if (!data || !data.details || !data.details.length) {
       return { notFound: true };
     }

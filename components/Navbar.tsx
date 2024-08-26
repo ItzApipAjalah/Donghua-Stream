@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { searchSeries } from '../services/api';
+import Link from 'next/link';
 
 const genres = [
   'Action', 'Drama', 'Adventure', 'Comedy', 'Crossdressing', 'Cultivation', 'Demons',
@@ -35,9 +36,9 @@ const Navbar: React.FC = () => {
     <>
       <nav className="bg-gray-800 p-4 shadow-lg fixed w-full z-10 top-0 left-0">
         <div className="container mx-auto flex justify-between items-center">
-          <a href="/" className="text-white text-2xl font-bold">
+          <Link href="/" className="text-white text-2xl font-bold">
             Donghua Stream
-          </a>
+          </Link>
           <div className="hidden lg:flex items-center space-x-6">
             <div className="relative">
               <input 
@@ -50,11 +51,7 @@ const Navbar: React.FC = () => {
               {searchResults.length > 0 && (
                 <div className="absolute top-full left-0 w-full bg-gray-800 rounded-lg shadow-lg mt-2 z-20">
                   {searchResults.map((result: any) => (
-                    <a 
-                      key={result.href} 
-                      href={result.href} 
-                      className="block px-4 py-2 text-gray-300 hover:bg-gray-700 transition duration-300 flex items-center"
-                    >
+                    <Link key={result.href} href={result.href} className="block px-4 py-2 text-gray-300 hover:bg-gray-700 transition duration-300 flex items-center">
                       <img 
                         src={result.image} 
                         alt={result.title} 
@@ -64,7 +61,7 @@ const Navbar: React.FC = () => {
                         <p className="text-white font-bold">{result.title}</p>
                         <p className="text-gray-400 text-sm">{result.type}</p>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -88,8 +85,16 @@ const Navbar: React.FC = () => {
             </button>
           </div>
           <ul className={`lg:flex lg:space-x-6 absolute lg:relative top-full left-0 w-full lg:w-auto bg-gray-800 lg:bg-transparent lg:flex-row flex-col ${isOpen ? 'block' : 'hidden'}`}>
-            <li><a href="/completed/1" className="block text-gray-300 hover:text-white transition duration-300 py-2 px-4 lg:py-0 lg:px-0">Completed</a></li>
-            <li><a href="/bookmarks" className="block text-gray-300 hover:text-white transition duration-300 py-2 px-4 lg:py-0 lg:px-0">Bookmark</a></li>
+            <li>
+              <Link href="/completed/1" className="block text-gray-300 hover:text-white transition duration-300 py-2 px-4 lg:py-0 lg:px-0">
+                Completed
+              </Link>
+            </li>
+            <li>
+              <Link href="/bookmarks" className="block text-gray-300 hover:text-white transition duration-300 py-2 px-4 lg:py-0 lg:px-0">
+                Bookmark
+              </Link>
+            </li>
 
             <li className="lg:hidden block text-gray-300 hover:text-white transition duration-300 py-2 px-4 lg:py-0 lg:px-0">
               <button 
@@ -110,11 +115,7 @@ const Navbar: React.FC = () => {
               {searchResults.length > 0 && (
                 <div className="absolute left-0 right-0 w-full bg-gray-800 rounded-lg shadow-lg mt-2 z-20">
                   {searchResults.map((result: any) => (
-                    <a 
-                      key={result.href} 
-                      href={result.href} 
-                      className="block px-4 py-2 text-gray-300 hover:bg-gray-700 transition duration-300 flex items-center"
-                    >
+                    <Link key={result.href} href={result.href} className="block px-4 py-2 text-gray-300 hover:bg-gray-700 transition duration-300 flex items-center">
                       <img 
                         src={result.image} 
                         alt={result.title} 
@@ -124,7 +125,7 @@ const Navbar: React.FC = () => {
                         <p className="text-white font-bold">{result.title}</p>
                         <p className="text-gray-400 text-sm">{result.type}</p>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -143,12 +144,9 @@ const Navbar: React.FC = () => {
           <ul>
             {genres.map((genre) => (
               <li key={genre} className="mb-2">
-                <a 
-                  href={`/genres/${genre.toLowerCase()}`} 
-                  className="text-gray-300 hover:bg-gray-700 block px-4 py-2 rounded-lg transition duration-300"
-                >
+                <Link href={`/genres/${genre.toLowerCase()}`} className="text-gray-300 hover:bg-gray-700 block px-4 py-2 rounded-lg transition duration-300">
                   {genre}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
