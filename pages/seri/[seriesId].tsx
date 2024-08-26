@@ -147,12 +147,18 @@ const SeriesPage: React.FC<SeriesDetailsProps> = ({ series, episodes, notFound }
         <h2 className="text-2xl font-bold mb-4">Episodes</h2>
         <ul className="list-disc list-inside space-y-4">
           {episodes?.map((episode) => (
-            <li key={episode.episodeNumber} className="bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-700 transition duration-300">
-              <a href={episode.episodeLink} className="text-blue-400 hover:underline">
-                <span className="font-bold">Episode {episode.episodeNumber}:</span> {episode.episodeTitle} 
-                <span className="text-gray-400"> (Released: {episode.episodeDate})</span>
-              </a>
-            </li>
+      <li 
+      key={episode.episodeNumber} 
+      className="bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-700 transition duration-300"
+    >
+      <Link 
+        href={episode.episodeLink} 
+        className="text-blue-400 hover:underline"
+      >
+        <span className="font-bold">Episode {episode.episodeNumber}:</span> {episode.episodeTitle} 
+        <span className="text-gray-400"> (Released: {episode.episodeDate})</span>
+      </Link>
+    </li>
           ))}
         </ul>
       </div>

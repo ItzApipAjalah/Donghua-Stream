@@ -49,3 +49,19 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background-color: #2d3748; /* darker color on hover */
 }
+
+/* Page transitions */
+.page-enter {
+  opacity: 0;
+}
+.page-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+.page-exit {
+  opacity: 1;
+}
+.page-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}

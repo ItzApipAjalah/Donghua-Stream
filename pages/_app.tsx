@@ -1,10 +1,12 @@
-// pages/_app.tsx
-
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import PageTransition from '../components/PageTransition';
 import '../styles/globals.css'; // Adjust the path as needed
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { pathname } = useRouter();
+
   return (
     <>
       <Head>
@@ -30,7 +32,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta property="og:type" content="website" />
         <title>Donghua Streaming</title>
       </Head>
-      <Component {...pageProps} />
+      <PageTransition location={useRouter()}>
+        <Component {...pageProps} />
+      </PageTransition>
     </>
   );
 }
