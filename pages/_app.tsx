@@ -5,7 +5,7 @@ import PageTransition from '../components/PageTransition';
 import '../styles/globals.css'; // Adjust the path as needed
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { pathname } = useRouter();
+  const router = useRouter();
 
   return (
     <>
@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta property="og:type" content="website" />
         <title>Donghua Streaming</title>
       </Head>
-      <PageTransition location={useRouter()}>
+      <PageTransition location={router}>
         <Component {...pageProps} />
       </PageTransition>
     </>
