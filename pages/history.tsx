@@ -61,7 +61,7 @@ const HistoryPage: React.FC = () => {
                   title={item.details.mainTitle}
                   seriesLink={`/episode/${item.episodeId}`}  // Link to the episode page
                   imageSrc={item.details.mainImage}
-                  episodeCount="N/A"  // Adjust based on available data
+                  episodeCount={item.details.episodesCount}
                   releaseTime={item.details.released}  // Adjust based on available data
                 />
                 <button
