@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
 import Head from 'next/head'; // Import Head for dynamic meta tags
 import "../../styles/globals.css";
+import Link from 'next/link';
 
 interface EpisodeDetailsProps {
   episode?: {
@@ -166,12 +167,13 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
         <div>
           <h2 className="text-3xl font-bold mb-4">Other Episodes</h2>
           <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {episode.episodes.map((ep) => (
-              <a 
-                key={ep.title} 
-                href={ep.href} 
-                className="block rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105 bg-gray-700"
-              >
+          {episode.episodes.map((ep) => (
+            <Link 
+              key={ep.title} 
+              href={ep.href} 
+              className="block rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105 bg-gray-700"
+            >
+              <div>
                 <img 
                   src={ep.thumbnail} 
                   alt={ep.title} 
@@ -181,8 +183,9 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
                   <h3 className="text-lg font-bold">{ep.title}</h3>
                   <p className="text-sm text-gray-300">{ep.details}</p>
                 </div>
-              </a>
-            ))}
+              </div>
+            </Link>
+          ))}
           </div>
         </div>
       </div>
