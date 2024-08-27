@@ -135,7 +135,7 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
         />
         <meta
           property="og:url"
-          content={`https://anime.amwp.website/episode/${episodeId}`}
+          content={`https://donghua.amwp.website/episode/${episodeId}`}
         />
         <meta property="og:type" content="video.other" />
       </Head>

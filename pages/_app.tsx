@@ -28,10 +28,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="Watch the latest and greatest anime series online. Stay updated with ongoing series and explore a vast collection of anime genres."
         />
         <meta property="og:image" content="https://i.ibb.co/Ht9qGK0/logo.png" />
-        <meta property="og:url" content="https://anime.amwp.website" />
+        <meta property="og:url" content="https://donghua.amwp.website" />
         <meta property="og:type" content="website" />
         <title>Donghua Streaming</title>
-        
       </Head>
       <PageTransition location={router}>
         <Component {...pageProps} />

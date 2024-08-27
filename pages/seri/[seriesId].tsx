@@ -93,7 +93,7 @@ const SeriesPage: React.FC<SeriesDetailsProps> = ({ series, episodes, notFound }
         <meta property="og:title" content={series?.mainTitle || 'Donghua Streaming'} />
         <meta property="og:description" content={series?.shortDescription || 'Watch the latest and greatest Donghua series online. Explore a vast collection of genres and stay updated with ongoing series.'} />
         <meta property="og:image" content={series?.mainImage || 'https://i.ibb.co/Ht9qGK0/logo.png'} />
-        <meta property="og:url" content={`https://anime.amwp.website/series/${seriesId}`} />
+        <meta property="og:url" content={`https://donghua.amwp.website/series/${seriesId}`} />
         <meta property="og:type" content="website" />
         {/* Add any other dynamic meta tags if needed */}
       </Head>
