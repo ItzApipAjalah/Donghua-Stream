@@ -51,22 +51,15 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
         const endTime = Date.now();
         let timeSpent = (endTime - startTime) / 1000 / 60 / 60; // time in hours
 
-        // Convert the episode duration to hours (assuming the format is "HH:MM:SS")
         const [hours, minutes, seconds] = episode.details.duration.split(':').map(Number);
         const episodeDuration = hours + minutes / 60 + seconds / 3600;
 
-        // Cap timeSpent by episodeDuration
         if (timeSpent > episodeDuration) {
           timeSpent = episodeDuration;
         }
 
-        // Remove any existing entry with the same episodeId
         const updatedHistory = history.filter((item: any) => item.episodeId !== episodeId);
-
-        // Add the current episode with time spent to the history
         updatedHistory.unshift({ ...episode, episodeId, timeSpent });
-
-        // Save the updated history back to local storage
         localStorage.setItem('episodeHistory', JSON.stringify(updatedHistory));
       };
 
@@ -77,6 +70,29 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
       };
     }
   }, [episode, episodeId, startTime]);
+
+  // Handle fullscreen change and orientation
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (document.fullscreenElement) {
+        // Check if the user is on a mobile device
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+          // Lock the orientation to landscape if in fullscreen
+          (screen.orientation as any).lock('landscape').catch((err: unknown) => {
+            console.error('Failed to lock screen orientation:', err);
+          });
+        }
+      }
+    };
+  
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+  
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+  
 
   if (!episode) {
     return <div className="bg-gray-900 text-white min-h-screen flex items-center justify-center">Episode not found</div>;
@@ -107,7 +123,6 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
           content={`https://anime.amwp.website/episode/${episodeId}`}
         />
         <meta property="og:type" content="video.other" />
-        {/* Add any other dynamic meta tags if needed */}
       </Head>
       <Navbar />
       <div className="container mx-auto p-6 bg-gray-900 text-white min-h-screen pt-16">
@@ -187,25 +202,25 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
         <div>
           <h2 className="text-3xl font-bold mb-4">Other Episodes</h2>
           <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {episode.episodes.map((ep) => (
-            <Link 
-              key={ep.title} 
-              href={ep.href} 
-              className="block rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105 bg-gray-700"
-            >
-              <div>
-                <img 
-                  src={ep.thumbnail} 
-                  alt={ep.title} 
-                  className="w-full h-40 object-cover" 
-                />
-                <div className="p-4">
-                  <h3 className="text-lg font-bold">{ep.title}</h3>
-                  <p className="text-sm text-gray-300">{ep.details}</p>
+            {episode.episodes.map((ep) => (
+              <Link 
+                key={ep.title} 
+                href={ep.href} 
+                className="block rounded-lg overflow-hidden shadow-md transform transition duration-300 hover:scale-105 bg-gray-700"
+              >
+                <div>
+                  <img 
+                    src={ep.thumbnail} 
+                    alt={ep.title} 
+                    className="w-full h-40 object-cover" 
+                  />
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold">{ep.title}</h3>
+                    <p className="text-sm text-gray-300">{ep.details}</p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

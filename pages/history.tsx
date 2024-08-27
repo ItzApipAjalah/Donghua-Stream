@@ -67,6 +67,17 @@ const HistoryPage: React.FC = () => {
     return `${days}d ${hours}h ${minutes}m`;
   };
 
+  const handleDelete = (episodeId?: string) => {
+    const updatedHistory = history.filter(item => item.episodeId !== episodeId);
+    setHistory(updatedHistory);
+    localStorage.setItem('episodeHistory', JSON.stringify(updatedHistory));
+    
+    // Recalculate total watch time after deletion
+    const totalTime = updatedHistory.reduce((sum, item) => sum + (item.timeSpent || 0), 0);
+    setTotalWatchTime(totalTime);
+    setDisplayedWatchTime(totalTime); // Update the displayed time immediately
+  };
+
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Navbar />
@@ -83,14 +94,21 @@ const HistoryPage: React.FC = () => {
         ) : (
           <div className="flex flex-wrap gap-6 justify-center">
             {history.map((item) => (
-              <DonghuaCard
-                key={item.episodeId}
-                title={item.details.mainTitle}
-                seriesLink={`/episode/${item.episodeId}`}
-                imageSrc={item.details.mainImage}
-                episodeCount="N/A"
-                releaseTime={item.details.released}
-              />
+              <div key={item.episodeId} className="relative">
+                <DonghuaCard
+                  title={item.details.mainTitle}
+                  seriesLink={`/episode/${item.episodeId}`}
+                  imageSrc={item.details.mainImage}
+                  episodeCount="N/A"
+                  releaseTime={item.details.released}
+                />
+                <button
+                  className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                  onClick={() => handleDelete(item.episodeId)}
+                >
+                  <AiOutlineDelete size={24} />
+                </button>
+              </div>
             ))}
           </div>
         )}
