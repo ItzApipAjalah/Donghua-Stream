@@ -31,6 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta property="og:url" content="https://anime.amwp.website" />
         <meta property="og:type" content="website" />
         <title>Donghua Streaming</title>
+        
       </Head>
       <PageTransition location={router}>
         <Component {...pageProps} />

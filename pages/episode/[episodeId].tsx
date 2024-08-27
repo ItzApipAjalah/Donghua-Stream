@@ -95,7 +95,7 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
   }, []);
 
   const shareEpisode = () => {
-    const episodeUrl = `https://anime.amwp.website/episode/${episodeId}`;
+    const episodeUrl = `https://donghua.amwp.website/episode/${episodeId}`;
     if (navigator.share) {
       navigator.share({
         title: episode?.details.mainTitle,
