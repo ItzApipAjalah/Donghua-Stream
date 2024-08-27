@@ -6,7 +6,7 @@ import Navbar from '../../components/Navbar';
 import Head from 'next/head';
 import "../../styles/globals.css";
 import Link from 'next/link';
-import { FaShareAlt } from 'react-icons/fa'; // Import the share icon
+import { FaShareAlt } from 'react-icons/fa'; 
 
 interface EpisodeDetailsProps {
   episode?: {
@@ -213,7 +213,7 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
               allowFullScreen
             ></iframe>
             {/* Add the card with share option */}
-            <div className="absolute top-2 right-2 bg-gray-800 bg-opacity-70 p-2 rounded-lg shadow-md flex items-center">
+            <div className="absolute top-2 left-2 bg-gray-800 bg-opacity-70 p-2 rounded-lg shadow-md flex items-center">
               <button
                 onClick={shareEpisode}
                 className="flex items-center text-white hover:text-gray-400 transition"
