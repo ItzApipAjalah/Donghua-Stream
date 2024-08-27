@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { fetchEpisodeDetails } from '../../services/api';
 import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
-import Head from 'next/head'; // Import Head for dynamic meta tags
+import Head from 'next/head';
 import "../../styles/globals.css";
 import Link from 'next/link';
+import { FaShareAlt } from 'react-icons/fa'; // Import the share icon
 
 interface EpisodeDetailsProps {
   episode?: {
@@ -85,14 +86,28 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
         }
       }
     };
-  
+
     document.addEventListener('fullscreenchange', handleFullscreenChange);
-  
+
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, []);
-  
+
+  const shareEpisode = () => {
+    const episodeUrl = `https://anime.amwp.website/episode/${episodeId}`;
+    if (navigator.share) {
+      navigator.share({
+        title: episode?.details.mainTitle,
+        url: episodeUrl,
+      }).catch((error) => console.error('Error sharing:', error));
+    } else {
+      // Fallback for older browsers
+      navigator.clipboard.writeText(episodeUrl)
+        .then(() => alert('Episode link copied to clipboard!'))
+        .catch((error) => console.error('Error copying link:', error));
+    }
+  };
 
   if (!episode) {
     return <div className="bg-gray-900 text-white min-h-screen flex items-center justify-center">Episode not found</div>;
@@ -127,10 +142,10 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
       <Navbar />
       <div className="container mx-auto p-6 bg-gray-900 text-white min-h-screen pt-16">
         <div className="flex flex-col md:flex-row items-start mb-8">
-          <img 
-            src={episode.details.mainImage} 
-            alt={episode.details.mainTitle} 
-            className="w-full md:w-1/3 h-auto rounded-lg shadow-lg" 
+          <img
+            src={episode.details.mainImage}
+            alt={episode.details.mainTitle}
+            className="w-full md:w-1/3 h-auto rounded-lg shadow-lg"
           />
           <div className="md:ml-8 mt-4 md:mt-0">
             <h1 className="text-4xl font-bold mb-2">{episode.details.mainTitle}</h1>
@@ -197,6 +212,16 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
               className="absolute top-0 left-0 w-full h-full border-none"
               allowFullScreen
             ></iframe>
+            {/* Add the card with share option */}
+            <div className="absolute top-2 right-2 bg-gray-800 bg-opacity-70 p-2 rounded-lg shadow-md flex items-center">
+              <button
+                onClick={shareEpisode}
+                className="flex items-center text-white hover:text-gray-400 transition"
+              >
+                <FaShareAlt className="mr-2" />
+                <span>Share</span>
+              </button>
+            </div>
           </div>
         </div>
         <div>
@@ -228,29 +253,23 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { episodeId } = context.query;
-
-  if (typeof episodeId !== 'string') {
-    return { notFound: true };
-  }
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const episodeId = params?.episodeId as string;
 
   try {
-    const data = await fetchEpisodeDetails(episodeId);
-
-    if (!data || !data.details) {
-      return { notFound: true };
-    }
-
+    const episode = await fetchEpisodeDetails(episodeId);
     return {
       props: {
-        episode: data,
+        episode,
       },
     };
   } catch (error) {
     console.error('Error fetching episode details:', error);
-    return { notFound: true };
+    return {
+      props: {},
+    };
   }
 };
 
 export default EpisodePage;
+
