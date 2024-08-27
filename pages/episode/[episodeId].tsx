@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchEpisodeDetails } from '../../services/api';
 import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
@@ -41,22 +41,42 @@ interface EpisodeDetailsProps {
 const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
   const router = useRouter();
   const { episodeId } = router.query;
+  const [startTime, setStartTime] = useState<number>(Date.now());
 
-  // Save episode data to local storage as history
   useEffect(() => {
     if (episode) {
       const history = JSON.parse(localStorage.getItem('episodeHistory') || '[]');
-      
-      // Remove any existing entry with the same episodeId
-      const updatedHistory = history.filter((item: any) => item.episodeId !== episodeId);
-      
-      // Add the current episode to the beginning of the history
-      updatedHistory.unshift({ ...episode, episodeId });
-      
-      // Save the updated history back to local storage
-      localStorage.setItem('episodeHistory', JSON.stringify(updatedHistory));
+
+      const handlePageLeave = () => {
+        const endTime = Date.now();
+        let timeSpent = (endTime - startTime) / 1000 / 60 / 60; // time in hours
+
+        // Convert the episode duration to hours (assuming the format is "HH:MM:SS")
+        const [hours, minutes, seconds] = episode.details.duration.split(':').map(Number);
+        const episodeDuration = hours + minutes / 60 + seconds / 3600;
+
+        // Cap timeSpent by episodeDuration
+        if (timeSpent > episodeDuration) {
+          timeSpent = episodeDuration;
+        }
+
+        // Remove any existing entry with the same episodeId
+        const updatedHistory = history.filter((item: any) => item.episodeId !== episodeId);
+
+        // Add the current episode with time spent to the history
+        updatedHistory.unshift({ ...episode, episodeId, timeSpent });
+
+        // Save the updated history back to local storage
+        localStorage.setItem('episodeHistory', JSON.stringify(updatedHistory));
+      };
+
+      window.addEventListener('beforeunload', handlePageLeave);
+      return () => {
+        handlePageLeave();
+        window.removeEventListener('beforeunload', handlePageLeave);
+      };
     }
-  }, [episode, episodeId]);
+  }, [episode, episodeId, startTime]);
 
   if (!episode) {
     return <div className="bg-gray-900 text-white min-h-screen flex items-center justify-center">Episode not found</div>;
