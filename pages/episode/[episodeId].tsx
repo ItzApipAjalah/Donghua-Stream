@@ -193,10 +193,6 @@ const EpisodePage: React.FC<EpisodeDetailsProps> = ({ episode }) => {
                 <p className="text-sm mb-2">{episode.details.episodesCount}</p>
               </div>
               <div>
-                <p className="text-sm font-semibold">Fansub:</p>
-                <p className="text-sm mb-2">{episode.details.fansub}</p>
-              </div>
-              <div>
                 <p className="text-sm font-semibold">Genres:</p>
                 <p className="text-sm mb-2">{episode.details.genres ? episode.details.genres.join(', ') : 'N/A'}</p>
               </div>

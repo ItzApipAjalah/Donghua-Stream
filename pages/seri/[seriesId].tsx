@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
 import Link from 'next/link';
 import Head from 'next/head';
+import { FaShareAlt } from 'react-icons/fa';
 import "../../styles/globals.css";
 
 interface SeriesDetailsProps {
@@ -55,6 +56,25 @@ const SeriesPage: React.FC<SeriesDetailsProps> = ({ series, episodes, notFound }
       setIsBookmarked(isBookmarked);
     }
   }, [seriesId]);
+
+  const handleShare = async () => {
+    const shareData = {
+      title: series?.mainTitle || 'Donghua Streaming',
+      text: series?.shortDescription || 'Watch this amazing Donghua series!',
+      url: `https://donghua.amwp.website/seri/${seriesId}`,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        alert('Link copied to clipboard!');
+      }
+    } catch (error) {
+      console.error('Error sharing the series:', error);
+    }
+  };
 
   const handleBookmark = () => {
     if (typeof seriesId === 'string') {
@@ -136,11 +156,18 @@ const SeriesPage: React.FC<SeriesDetailsProps> = ({ series, episodes, notFound }
           </div>
           <p className="text-gray-300 mb-4">{series?.description}</p>
           <button
-            onClick={handleBookmark}
-            className={`px-4 py-2 rounded-lg transition duration-300 ${isBookmarked ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-600 text-white`}
-          >
-            {isBookmarked ? 'Remove Bookmark' : 'Bookmark'}
-          </button>
+              onClick={handleBookmark}
+              className={`px-4 py-2 rounded-lg transition duration-300 ${isBookmarked ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-600 text-white`}
+            >
+              {isBookmarked ? 'Remove Bookmark' : 'Bookmark'}
+            </button>
+            <button
+              onClick={handleShare}
+              className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 text-white transition duration-300 flex items-center mt-4"
+            >
+              <FaShareAlt className="mr-2"/> Share
+            </button>
+          
         </div>
       </div>
       <div className="container mx-auto p-4 mt-8">
@@ -179,7 +206,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!data || !data.details || !data.details.length) {
       return { notFound: true };
     }
-
+    
     return {
       props: {
         series: data.details[0],
