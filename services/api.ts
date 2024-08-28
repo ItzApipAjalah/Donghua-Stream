@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_URL = 'http://donghua-api.amwp.website/ongoing';
+const API_URL = 'https://anichin-api.amwp.website/ongoing';
 const AUTH_TOKEN = process.env.AUTH_TOKEN; // Use the environment variable
-const SERIES_API_URL = 'http://donghua-api.amwp.website/';
-const EPISODE_API_URL = 'http://donghua-api.amwp.website/';
-const BASE_URL = 'http://donghua-api.amwp.website';
+const SERIES_API_URL = 'https://anichin-api.amwp.website/';
+const EPISODE_API_URL = 'https://anichin-api.amwp.website/';
+const BASE_URL = 'https://anichin-api.amwp.website';
 
 export const fetchDonghua = async () => {
   const response = await axios.get(API_URL, {
@@ -69,7 +69,7 @@ export const fetchSeriesByGenre = async (genrename: string) => {
 
 export const fetchCompletedSeries = async (page: number) => {
   try {
-    const response = await axios.get(`http://donghua-api.amwp.website/completed/${page}`, {
+    const response = await axios.get(`https://anichin-api.amwp.website/completed/${page}`, {
       headers: {
         Authorization: AUTH_TOKEN,
       },
