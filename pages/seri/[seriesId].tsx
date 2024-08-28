@@ -60,7 +60,6 @@ const SeriesPage: React.FC<SeriesDetailsProps> = ({ series, episodes, notFound }
   const handleShare = async () => {
     const shareData = {
       title: series?.mainTitle || 'Donghua Streaming',
-      text: series?.shortDescription || 'Watch this amazing Donghua series!',
       url: `https://donghua.amwp.website/seri/${seriesId}`,
     };
 
