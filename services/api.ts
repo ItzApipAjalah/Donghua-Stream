@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'http://donghua-api.amwp.website/ongoing';
-const AUTH_TOKEN = process.env.AUTH_TOKEN; // Use the environment variable
-const SERIES_API_URL = 'http://donghua-api.amwp.website/';
-const EPISODE_API_URL = 'http://donghua-api.amwp.website/';
-const BASE_URL = 'http://donghua-api.amwp.website';
+const API_URL = 'https://anichin-api.amwp.website/ongoing';
+const AUTH_TOKEN = process.env.AUTH_TOKEN;
+
+const BASE_URL = 'https://anichin-api.amwp.website';
 
 export const fetchDonghua = async () => {
   const response = await axios.get(API_URL, {
@@ -17,7 +16,7 @@ export const fetchDonghua = async () => {
 
 export const fetchSeriesDetails = async (seriesId: string) => {
   try {
-    const response = await axios.get(`${SERIES_API_URL}/seri/${seriesId}`, {
+    const response = await axios.get(`${BASE_URL}/seri/${seriesId}`, {
       headers: {
         Authorization: AUTH_TOKEN,
       },
@@ -31,7 +30,7 @@ export const fetchSeriesDetails = async (seriesId: string) => {
 
 export const fetchEpisodeDetails = async (episodeId: string) => {
   try {
-    const response = await axios.get(`${EPISODE_API_URL}/episode/${episodeId}`, {
+    const response = await axios.get(`${BASE_URL}/episode/${episodeId}`, {
       headers: {
         Authorization: AUTH_TOKEN,
       },
@@ -69,14 +68,14 @@ export const fetchSeriesByGenre = async (genrename: string) => {
 
 export const fetchCompletedSeries = async (page: number) => {
   try {
-    const response = await axios.get(`http://donghua-api.amwp.website/completed/${page}`, {
+    const response = await axios.get(`${BASE_URL}/completed/${page}`, {
       headers: {
         Authorization: AUTH_TOKEN,
       },
     });
 
     const data = response.data;
-    const totalPages = Math.ceil(data.totalItems / 16); // Replace data.totalItems with the actual total count if available
+    const totalPages = Math.ceil(data.totalItems / 16); 
 
     return {
       seriesList: data,
@@ -84,6 +83,20 @@ export const fetchCompletedSeries = async (page: number) => {
     };
   } catch (error) {
     console.error('Error fetching completed series:', error);
+    throw error;
+  }
+};
+
+export const fetchPopularDonghua = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/popular`, {
+      headers: {
+        Authorization: AUTH_TOKEN,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching popular donghua:', error);
     throw error;
   }
 };

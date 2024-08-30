@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const response = await axios.get(`http://donghua-api.amwp.website/search/${query}`, {
+    const response = await axios.get(`https://anichin-api.amwp.website/search/${query}`, {
       headers: {
         Authorization: AUTH_TOKEN,
       },
